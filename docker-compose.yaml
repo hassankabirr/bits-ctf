@@ -10,21 +10,13 @@ services:
     ports:
       - "3000:8080"
     restart: always
-    command: sh -c "python3 manage.py migrate && gunicorn Ctf_Project.wsgi:application --workers=1 --bind 0.0.0.0:8080"
+    command: sh -c "python3 manage.py migrate && python3 manage.py collectstatic --noinput && gunicorn Ctf_Project.wsgi:application --workers=1 --bind 0.0.0.0:8080"
     depends_on:
       - ctf_db
     networks:
       - apachee_network
-    #env_file:
-    #  - ./Ctf_Project/back.env
-    environment:
-      - SECRET_KEY=django-insecure-pj16atlem3qxgm3b_7i*jiex)*yiymj^-fr3)_tg-rjl*51gzh
-      - DEBUG=True
-      - db_HOST=ctf_db
-      - db_NAME=apachee_user
-      - db_USER=apachee_user
-      - db_PASSWORD=apachee_1234
-      - db_PORT=5432
+    env_file:
+      - ./Ctf_Project/back.env
 
 
   ctf_db:
@@ -35,13 +27,9 @@ services:
       - ctf_db_volume:/var/lib/postgres/data
     networks:
       - apachee_network
-    #env_file:
-    #  - ./Ctf_Project/db.env
-    environment:
-      - POSTGRES_NAME=apachee_user
-      - POSTGRES_USER=apachee_user
-      - POSTGRES_PASSWORD=apachee_1234
-      - POSTGRES_PORT=5432
+    env_file:
+      - ./Ctf_Project/db.env
+
     ports:
       - "5432"
     # command:
