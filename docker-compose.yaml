@@ -15,19 +15,38 @@ services:
       - ctf_db
     networks:
       - apachee_network
-    env_file:
-      - ./Ctf_Project/back.env
+    #env_file:
+    #  - ./Ctf_Project/back.env
+    environment:
+      - SECRET_KEY=django-insecure-pj16atlem3qxgm3b_7i*jiex)*yiymj^-fr3)_tg-rjl*51gzh
+      - DEBUG=True
+      - db_HOST=ctf_db
+      - db_NAME=apachee_user
+      - db_USER=apachee_user
+      - db_PASSWORD=apachee_1234
+      - db_PORT=5432
+
 
   ctf_db:
     container_name: ctf_db
-    image: postgres:12.0-alpine
+    image: apachee_postgres:version7
     restart: always
     volumes:
       - ctf_db_volume:/var/lib/postgres/data
     networks:
       - apachee_network
-    env_file:
-      - ./Ctf_Project/db.env
+    #env_file:
+    #  - ./Ctf_Project/db.env
+    environment:
+      - POSTGRES_NAME=apachee_user
+      - POSTGRES_USER=apachee_user
+      - POSTGRES_PASSWORD=apachee_1234
+      - POSTGRES_PORT=5432
+    ports:
+      - "5432"
+    # command:
+    #   - sh -c "psql -U postgres -c \"create user apachee_user with password apachee_1234;\" "
+    #   - sh -c "psql -U postgres -c \"create database apachee_db owner apachee_user;\" "
 
 volumes:
   ctf_db_volume:

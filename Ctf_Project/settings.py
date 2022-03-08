@@ -101,11 +101,11 @@ WSGI_APPLICATION = 'Ctf_Project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env('POSTGRES_NAME'),
-        'USER': env('POSTGRES_USER'),
-        'PASSWORD': env('POSTGRES_PASSWORD'),
-        'HOST': 'ctf_db',
-        'PORT': env('POSTGRES_PORT'),
+        'NAME': env('db_NAME'),
+        'USER': env('db_USER'),
+        'PASSWORD': env('db_PASSWORD'),
+        'HOST': env('db_HOST'),
+        'PORT': env('db_PORT'),
     }
 
 }
