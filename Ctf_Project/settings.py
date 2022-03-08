@@ -47,6 +47,7 @@ CORS_ALLOW_METHODS = [
     'POST',
     'PUT',
 ]
+CSRF_TRUSTED_ORIGINS = ['http://*.apachee-club.ir', 'http://*.176.101.48.158']
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -144,7 +145,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # STATICFILES_DIRS = [
 #     BASE_DIR/'static',
