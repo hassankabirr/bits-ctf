@@ -47,7 +47,7 @@ CORS_ALLOW_METHODS = [
     'POST',
     'PUT',
 ]
-CSRF_TRUSTED_ORIGINS = ['http://*.apachee-club.ir', 'http://*.176.101.48.158']
+CSRF_TRUSTED_ORIGINS = ['https://*.apachee-club.ir', 'https://*.176.101.48.158']
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
