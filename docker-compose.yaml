@@ -13,6 +13,8 @@ services:
     command: sh -c "python3 manage.py migrate && python3 manage.py collectstatic --noinput && gunicorn Ctf_Project.wsgi:application --workers=1 --bind 0.0.0.0:8080"
     depends_on:
       - ctf_db
+    volumes:
+      - "./static:/usr/src/app/static"
     networks:
       - apachee_network
     env_file:
@@ -21,10 +23,10 @@ services:
 
   ctf_db:
     container_name: ctf_db
-    image: apachee_postgres:version7
+    image: apachee_postgres:8.0.0
     restart: always
     volumes:
-      - ctf_db_volume:/var/lib/postgres/data
+      - ctf_db_volume:/var/lib/postgresql/data
     networks:
       - apachee_network
     env_file:
