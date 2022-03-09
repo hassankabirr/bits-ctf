@@ -180,7 +180,8 @@ def create_team(request):
     else:
         context = {
             'verify': False,
-            'user': request.user
+            'user': request.user,
+            'startTime': contest.start_time
         }
         return render(request, 'main_app/createTeam.html', context)
 
