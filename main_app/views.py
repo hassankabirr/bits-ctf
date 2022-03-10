@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from datetime import datetime
+from datetime import datetime, timedelta
 from .models import *
 # Create your views here.
 
@@ -30,7 +30,7 @@ def questions(request):
     contest = get_contest()
     if not(request.user.user_status == 2 and contest.contest_status >= 1):
         raise Http404('Not found')
-    questions = Question.objects.values('pk', 'title', 'score', 'cat').annotate(solved_count=Count('teams')).order_by()
+    questions = Question.objects.values('pk', 'title', 'score', 'cat', 'created').annotate(solved_count=Count('teams')).order_by('created')
     list_of_pk = request.user.team.solved_questions.values_list('pk', flat=True)
 
     for question in questions:
@@ -38,10 +38,11 @@ def questions(request):
             question['solved'] = True
         else:
             question['solved'] = False
+    delta_time = timedelta(hours=3, minutes=30)
     context = {
         'questions': questions,
         'user': request.user,
-        'endTime': contest.end_time
+        'endTime': contest.end_time + delta_time
     }
     return render(request, 'main_app/dashboard.html', context)
 
@@ -57,7 +58,7 @@ def question(request, pk):
         finished = False
     is_flag_registered = False
     question = Question.objects.get(pk=pk)
-    questions = Question.objects.all()
+    questions = Question.objects.all().order_by('created')
     form = FlagForm()
 
     if question in request.user.team.solved_questions.all():
@@ -78,6 +79,7 @@ def question(request, pk):
                     is_flag_registered = True
                 else:
                     messages.error(request, 'Wrong answer!!!')
+    delta_time = timedelta(hours=3, minutes=30)
     context = {
         'question': question,
         'form': form,
@@ -85,7 +87,7 @@ def question(request, pk):
         'questions': questions,
         'user': request.user,
         'finished': finished,
-        'endTime': contest.end_time
+        'endTime': contest.end_time + delta_time
     }
     return render(request, 'main_app/question-detail.html', context)
 
@@ -125,6 +127,7 @@ def join_team(request):
         else:
             hash = ''
             team_name = ''
+        delta_time = timedelta(hours=3, minutes=30)
         context = {
             'create_form': create_form,
             'join_form': join_form,
@@ -132,7 +135,7 @@ def join_team(request):
             'user': request.user,
             'hash': hash,
             'team_name': team_name,
-            'startTime': contest.start_time
+            'startTime': contest.start_time + delta_time
         }
         return render(request, 'main_app/createTeam.html', context)
     else:
@@ -144,6 +147,7 @@ def create_team(request):
     contest = get_contest()
     if contest.contest_status >= 1:
         raise Http404('Not Found')
+    delta_time = timedelta(hours=3, minutes=30)
     if request.user.user_status >= 1:
         hash = ''
         team_name = ''
@@ -174,14 +178,14 @@ def create_team(request):
             'user': request.user,
             'hash': hash,
             'team_name': team_name,
-            'startTime': contest.start_time
+            'startTime': contest.start_time + delta_time
         }
         return render(request, 'main_app/createTeam.html', context)
     else:
         context = {
             'verify': False,
             'user': request.user,
-            'startTime': contest.start_time
+            'startTime': contest.start_time + delta_time
         }
         return render(request, 'main_app/createTeam.html', context)
 
@@ -197,7 +201,7 @@ def registeruser(request):
             user = form.save(commit=False)
             user.username = user.username.lower()
             user.save()
-            messages.success(request, 'your account create successfully')
+            messages.success(request, 'your account has been created successfully')
             messages.success(request, 'Please Login and verify your account')
             return redirect('login')
         # else:
@@ -218,11 +222,12 @@ def table(request):
     questions = Question.objects.all()
     teams = sorted(Team.objects.all(), key=lambda t: t.total_score, reverse=True)
     # teams = .order_by('total_score')
+    delta_time = timedelta(hours=3, minutes=30)
     context = {
         'questions': questions,
         'teams': teams,
         'user': request.user,
-        'endTime': contest.end_time
+        'endTime': contest.end_time + delta_time
     }
     return render(request, 'main_app/scoreBoard.html', context)
 
