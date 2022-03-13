@@ -12,6 +12,15 @@ admin.site.register(Contest)
 
 
 class CustomUserAdmin(UserAdmin):
+    list_filter = ['user_status']
+    list_display = [
+        'username',
+        'email',
+        'first_name',
+        'last_name',
+        'user_status',
+        'university'
+    ]
     fieldsets = (
         *UserAdmin.fieldsets,  # original form fieldsets, expanded
         (                      # new fieldset added on to the bottom
@@ -20,6 +29,7 @@ class CustomUserAdmin(UserAdmin):
                 'fields': (
                     'team',
                     'user_status',
+                    'university'
 
                 ),
             },
