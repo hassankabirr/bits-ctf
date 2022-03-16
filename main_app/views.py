@@ -28,8 +28,9 @@ def get_contest():
 @login_required(login_url='welcome')
 def questions(request):
     contest = get_contest()
-    if not(request.user.user_status == 2 and contest.contest_status >= 1):
-        raise Http404('Not found')
+    if not request.user.is_superuser:
+        if not(request.user.user_status == 2 and contest.contest_status >= 1):
+            raise Http404('Not found')
     questions = Question.objects.values('pk', 'title', 'score', 'cat', 'created').annotate(solved_count=Count('teams')).order_by('created')
     list_of_pk = request.user.team.solved_questions.values_list('pk', flat=True)
 
@@ -50,8 +51,9 @@ def questions(request):
 @login_required(login_url='welcome')
 def question(request, pk):
     contest = get_contest()
-    if not (request.user.user_status == 2 and contest.contest_status >= 1):
-        raise Http404('Not found')
+    if not request.user.is_superuser:
+        if not (request.user.user_status == 2 and contest.contest_status >= 1):
+            raise Http404('Not found')
     if contest.contest_status == 2:
         finished = True
     else:
