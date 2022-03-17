@@ -19,7 +19,8 @@ class CustomUserAdmin(UserAdmin):
         'first_name',
         'last_name',
         'user_status',
-        'university'
+        'university',
+        'team'
     ]
     fieldsets = (
         *UserAdmin.fieldsets,  # original form fieldsets, expanded
